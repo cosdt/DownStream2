@@ -1,0 +1,34 @@
+name: CI from A
+
+on:
+  repository_dispatch:
+    types: [from-a-pr]
+
+jobs:
+  ci:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout B
+        uses: actions/checkout@v4
+
+      - name: Fetch A repo
+        run: |
+          git clone https://github.com/${{ github.event.client_payload.a_repo }} A
+          cd A
+          git checkout ${{ github.event.client_payload.commit }}
+
+      - name: Build & Test
+        run: |
+          echo "Run CI for A commit"
+          ./ci/run.sh
+
+      - name: Report result
+        if: always()
+        run: |
+          curl -X POST https://111.119.217.84:8000/report \
+            -H "Content-Type: application/json" \
+            -d '{
+              "run_id": "${{ github.run_id }}",
+              "status": "${{ job.status }}"
+            }'
