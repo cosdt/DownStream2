@@ -1,12 +1,25 @@
+name: B CI
+
 on:
-  check_run:
-    types: [created]
+  repository_dispatch:
+    types: [from-a-pr]
+
+permissions:
+  contents: read
 
 jobs:
-  ci:
-    if: github.event.check_run.name == 'from-a-pr'
+  run-ci:
     runs-on: ubuntu-latest
+
     steps:
-      - run: |
-          echo "Triggered by A repo"
-          echo "${{ github.event.check_run.output.summary }}"
+      - name: Print payload
+        run: |
+          echo "A repo: ${{ github.event.client_payload.a_repo }}"
+          echo "A sha:  ${{ github.event.client_payload.a_sha }}"
+          echo "Check run id: ${{ github.event.client_payload.check_run_id }}"
+
+      - name: Fake CI
+        run: |
+          echo "Running CI in B..."
+          sleep 5
+          echo "CI done"
