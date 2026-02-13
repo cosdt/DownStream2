@@ -2,7 +2,7 @@ name: Downstream CI
 
 on:
   repository_dispatch:
-    types: [from-a]
+    types: [trigger-b-ci]
 
 jobs:
   ci:
@@ -18,7 +18,7 @@ jobs:
           sleep 10
           echo "Done"
 
-      - name: Report result
+      - name: Report result to server
         if: always()
         env:
           SERVER_URL: https://111.119.217.84:8000
@@ -33,8 +33,7 @@ jobs:
             -H "Content-Type: application/json" \
             -d "{
               \"a_repo\": \"${{ github.event.client_payload.a_repo }}\",
-              \"check_run_id\": ${{ github.event.client_payload.check_run_id }},
+              \"a_sha\": \"${{ github.event.client_payload.a_sha }}\",
               \"conclusion\": \"$RESULT\",
               \"url\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
             }"
-
