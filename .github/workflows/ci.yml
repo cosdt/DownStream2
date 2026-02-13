@@ -1,25 +1,40 @@
-name: B CI
+name: Downstream CI
 
 on:
   repository_dispatch:
-    types: [from-a-pr]
-
-permissions:
-  contents: read
+    types: [from-a]
 
 jobs:
-  run-ci:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print payload
-        run: |
-          echo "A repo: ${{ github.event.client_payload.a_repo }}"
-          echo "A sha:  ${{ github.event.client_payload.a_sha }}"
-          echo "Check run id: ${{ github.event.client_payload.check_run_id }}"
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Fake CI
+      - name: Run CI
         run: |
-          echo "Running CI in B..."
-          sleep 5
-          echo "CI done"
+          echo "Running B CI..."
+          sleep 10
+          echo "Done"
+
+      - name: Report result
+        if: always()
+        env:
+          SERVER_URL: https://111.119.217.84:8000
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            RESULT=success
+          else
+            RESULT=failure
+          fi
+
+          curl -X POST $SERVER_URL/ci/result \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"a_repo\": \"${{ github.event.client_payload.a_repo }}\",
+              \"check_run_id\": ${{ github.event.client_payload.check_run_id }},
+              \"conclusion\": \"$RESULT\",
+              \"url\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+            }"
+
