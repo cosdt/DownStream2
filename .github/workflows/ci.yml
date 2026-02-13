@@ -20,6 +20,8 @@ jobs:
 
       - name: Report result to server
         if: always()
+        env:
+          SERVER_URL: https://111.119.217.84:8000
         run: |
           if [ "${{ job.status }}" = "success" ]; then
             RESULT=success
@@ -27,6 +29,11 @@ jobs:
             RESULT=failure
           fi
 
-          curl -X POST http://111.119.217.84:8000/ci/result \
+          curl -X POST $SERVER_URL/ci/result \
             -H "Content-Type: application/json" \
-            -d '{"a_repo":"x","a_sha":"y","conclusion":"success","url":"z"}'
+            -d "{
+              \"a_repo\": \"${{ github.event.client_payload.a_repo }}\",
+              \"a_sha\": \"${{ github.event.client_payload.a_sha }}\",
+              \"conclusion\": \"$RESULT\",
+              \"url\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+            }"
