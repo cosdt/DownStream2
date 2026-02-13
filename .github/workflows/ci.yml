@@ -21,7 +21,7 @@ jobs:
       - name: Report result to server
         if: always()
         env:
-          SERVER_URL: https://111.119.217.84:8000
+          SERVER_URL: https://smee.io/FYIELaMU9gILwrNv
         run: |
           if [ "${{ job.status }}" = "success" ]; then
             RESULT=success
