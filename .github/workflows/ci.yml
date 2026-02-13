@@ -20,6 +20,8 @@ jobs:
 
       - name: Report result to server
         if: always()
+        env:
+          SERVER_URL: https://111.119.217.84:8000
         run: |
           if [ "${{ job.status }}" = "success" ]; then
             RESULT=success
@@ -27,7 +29,7 @@ jobs:
             RESULT=failure
           fi
 
-          curl -X POST https://smee.io/FYIELaMU9gILwrNv/ci/result \
+          curl -X POST $SERVER_URL/ci/result \
             -H "Content-Type: application/json" \
             -d "{
               \"a_repo\": \"${{ github.event.client_payload.a_repo }}\",
