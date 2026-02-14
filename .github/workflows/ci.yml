@@ -1,8 +1,8 @@
-name: Downstream CI
+name: PyTorch Downstream CI
 
 on:
   repository_dispatch:
-    types: [trigger-b-ci]
+    types: [pytorch-pr-trigger]
 
 jobs:
   ci:
