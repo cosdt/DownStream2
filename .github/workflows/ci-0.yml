@@ -3,6 +3,13 @@ name: PyTorch Downstream CI 0
 on:
   repository_dispatch:
     types: [pytorch-pr-trigger]
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    
 
 jobs:
   ci:
