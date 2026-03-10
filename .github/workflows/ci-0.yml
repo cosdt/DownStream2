@@ -42,9 +42,9 @@ jobs:
           curl -X POST $SERVER_URL/ci/result \
             -H "Content-Type: application/json" \
             -d "{
-              \"a_name\": \"PyTorch Downstream CI 0\",
-              \"a_repo\": \"${{ github.event.client_payload.a_repo }}\",
-              \"a_sha\": \"${{ github.event.client_payload.a_sha }}\",
+              \"workflow_name\": \"PyTorch Downstream CI 0\",
+              \"upstream_repo\": \"${{ github.event.client_payload.upstream_repo }}\",
+              \"commit_sha\": \"${{ github.event.client_payload.commit_sha }}\",
               \"conclusion\": \"$RESULT\",
               \"url\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
             }"
