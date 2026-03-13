@@ -30,8 +30,6 @@ jobs:
 
       - name: Report result to server
         if: always()
-        env:
-          SERVER_URL: http://111.119.217.84:8001
         run: |
           if [ "${{ job.status }}" = "success" ]; then
             RESULT=success
@@ -39,7 +37,7 @@ jobs:
             RESULT=failure
           fi
 
-          curl -X POST $SERVER_URL/ci/result \
+          curl -X POST "${{ vars.CI_RESULT_URL }}" \
             -H "Content-Type: application/json" \
             -d "{
               \"workflow_name\": \"PyTorch Downstream CI 0\",
