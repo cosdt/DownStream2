@@ -32,7 +32,7 @@ jobs:
               \"upstream_repo\": \"${{ github.event.client_payload.upstream_repo }}\",
               \"commit_sha\": \"${{ github.event.client_payload.commit_sha }}\",
               \"status\": \"in_progress\",
-              \"conclusion\": \"none\",
+              \"conclusion\": \"neutral\",
               \"url\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
             }"
 
@@ -57,7 +57,7 @@ jobs:
               \"workflow_name\": \"PyTorch Downstream CI 0\",
               \"upstream_repo\": \"${{ github.event.client_payload.upstream_repo }}\",
               \"commit_sha\": \"${{ github.event.client_payload.commit_sha }}\",
-              \"status\": \"finished\",
+              \"status\": \"completed\",
               \"conclusion\": \"$RESULT\",
               \"url\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
             }"
