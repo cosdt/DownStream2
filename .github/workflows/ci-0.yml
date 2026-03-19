@@ -51,7 +51,7 @@ jobs:
       - name: Run CI
         run: |
           echo "Running downstream workflow 0..."
-          sleep 1
+          sleep 10
           echo "Done"
 
       - name: Report final result to server
