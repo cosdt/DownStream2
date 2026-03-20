@@ -7,104 +7,46 @@ on:
 
 permissions:
   contents: read
-  id-token: write
-
-env:
-  WORKFLOW_NAME: PyTorch Downstream CI 0
+  id-token: write  # Required by report-ci-result to obtain an OIDC token
 
 jobs:
   ci:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      # Step 1: Check out this downstream repo
+      - name: Checkout downstream repo
         uses: actions/checkout@v4
 
-      - name: Report in-progress result to server
-        shell: bash
-        run: |
-          set -euo pipefail
+      # Step 2: Report in-progress status as early as possible so the upstream
+      #         Check Run transitions to "in progress" without delay.
+      - name: Report in-progress to Relay Server
+        uses: cosdt/test-infra/.github/actions/report-ci-result@resuable-action
+        with:
+          relay-server-url: ${{ vars.CI_RELAY_SERVER_URL }}
+          status: in_progress
 
-          payload="$(cat <<EOF
-          {
-            "workflow_name": "${WORKFLOW_NAME}",
-            "upstream_repo": "${{ github.event.client_payload.upstream_repo }}",
-            "commit_sha": "${{ github.event.client_payload.commit_sha }}",
-            "status": "in_progress",
-            "conclusion": "",
-            "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          }
-          EOF
-          )"
+      # Step 3: Check out the upstream PyTorch commit that triggered this run.
+      #         upstream-repo and commit-sha are read automatically from the
+      #         repository_dispatch client_payload.
+      - name: Checkout upstream PyTorch PR
+        uses: pytorch/test-infra/.github/actions/checkout-pr@resuable-action
+        with:
+          path: pytorch
 
-          for attempt in 1 2 3; do
-            oidc_response="$(curl -fsSL \
-              -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-              "$ACTIONS_ID_TOKEN_REQUEST_URL")"
-
-            oidc_token="$(python -c 'import json,sys; print(json.load(sys.stdin)["value"])' <<< "$oidc_response")"
-
-            if curl -fsSL \
-              -X POST "${{ vars.CI_RESULT_URL }}" \
-              -H "Content-Type: application/json" \
-              -H "Authorization: Bearer $oidc_token" \
-              -d "$payload"; then
-              exit 0
-            fi
-
-            sleep 5
-          done
-
-          echo "failed to report in_progress result"
-          exit 1
-
+      # Step 4: Run CI
       - name: Run CI
         run: |
           echo "Running downstream workflow 0..."
           sleep 30
           echo "Done"
 
-      - name: Report final result to server
+      # Step 5: Always report the final conclusion so the upstream Check Run
+      #         is updated even when earlier steps fail.
+      - name: Report final result to Relay Server
         if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          if [ "${{ job.status }}" = "success" ]; then
-            result="success"
-          else
-            result="failure"
-          fi
-
-          payload="$(cat <<EOF
-          {
-            "workflow_name": "${WORKFLOW_NAME}",
-            "upstream_repo": "${{ github.event.client_payload.upstream_repo }}",
-            "commit_sha": "${{ github.event.client_payload.commit_sha }}",
-            "status": "completed",
-            "conclusion": "${result}",
-            "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          }
-          EOF
-          )"
-
-          for attempt in 1 2 3; do
-            oidc_response="$(curl -fsSL \
-              -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-              "$ACTIONS_ID_TOKEN_REQUEST_URL")"
-
-            oidc_token="$(python -c 'import json,sys; print(json.load(sys.stdin)["value"])' <<< "$oidc_response")"
-
-            if curl -fsSL \
-              -X POST "${{ vars.CI_RESULT_URL }}" \
-              -H "Content-Type: application/json" \
-              -H "Authorization: Bearer $oidc_token" \
-              -d "$payload"; then
-              exit 0
-            fi
-
-            sleep 5
-          done
-
-          echo "failed to report completed result"
-          exit 1
+        uses: cosdt/test-infra/.github/actions/report-ci-result@resuable-action
+        with:
+          relay-server-url: ${{ vars.CI_RELAY_SERVER_URL }}
+          status: completed
+          conclusion: ${{ job.status }}
