@@ -17,6 +17,8 @@ jobs:
       # Step 1: Check out this downstream repo
       - name: Checkout downstream repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # # Step 2: Report in-progress status as early as possible so the upstream
       # #         Check Run transitions to "in progress" without delay.
@@ -32,6 +34,7 @@ jobs:
       - name: Checkout upstream PyTorch PR
         uses: cosdt/test-infra/.github/actions/checkout-upstream-pr@resuable-action
         with:
+          fetch-depth: 0
           path: pytorch
 
       - name: Show last 10 commits (upstream pytorch)
