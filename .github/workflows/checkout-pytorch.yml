@@ -1,0 +1,59 @@
+on:
+  workflow_dispatch: 
+
+permissions:
+  contents: read
+  id-token: write  # Required by report-ci-result to obtain an OIDC token
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out this downstream repo
+      - name: Checkout downstream repo
+        uses: actions/checkout@v6
+
+      # # Step 2: Report in-progress status as early as possible so the upstream
+      # #         Check Run transitions to "in progress" without delay.
+      # - name: Report in-progress to Relay Server
+      #   uses: cosdt/test-infra/.github/actions/report-ci-result@resuable-action
+      #   with:
+      #     relay-server-url: ${{ vars.CI_RELAY_SERVER_URL }}
+      #     status: in_progress
+
+      # Step 3: Check out the upstream PyTorch commit that triggered this run.
+      #         upstream-repo and commit-sha are read automatically from the
+      #         repository_dispatch client_payload.
+      - name: Checkout upstream PyTorch PR
+        uses: actions/checkout@v6
+        with:
+          repository: pytorch/pytorch
+          ref: d44c4eebc4f6ccd932c13af376fecca72584c530
+          token: ${{ github.token }}
+          submodules: recursive
+          path: pytorch
+
+      - name: Show last 10 commits (upstream pytorch)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd pytorch
+          git --no-pager log -n 10 --oneline --decorate
+
+      # # Step 4: Run CI
+      # - name: Run CI
+      #   run: |
+      #     echo "Running downstream workflow 0..."
+      #     sleep 30
+      #     echo "Done"
+
+      # # Step 5: Always report the final conclusion so the upstream Check Run
+      # #         is updated even when earlier steps fail.
+      # - name: Report final result to Relay Server
+      #   if: always()
+      #   uses: cosdt/test-infra/.github/actions/report-ci-result@resuable-action
+      #   with:
+      #     relay-server-url: ${{ vars.CI_RELAY_SERVER_URL }}
+      #     status: completed
+      #     conclusion: ${{ job.status }}
