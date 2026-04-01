@@ -16,7 +16,7 @@ jobs:
     steps:
       # Step 1: Check out this downstream repo
       - name: Checkout downstream repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # # Step 2: Report in-progress status as early as possible so the upstream
       # #         Check Run transitions to "in progress" without delay.
@@ -30,8 +30,12 @@ jobs:
       #         upstream-repo and commit-sha are read automatically from the
       #         repository_dispatch client_payload.
       - name: Checkout upstream PyTorch PR
-        uses: cosdt/test-infra/.github/actions/checkout-upstream-pr@resuable-action
+        uses: actions/checkout@v6
         with:
+          repository: ${{ github.event.client_payload.upstream_repo }}
+          ref: ${{ github.event.client_payload.head_sha }}
+          token: ${{ github.token }}
+          submodules: recursive
           path: pytorch
 
       - name: Show last 10 commits (upstream pytorch)
