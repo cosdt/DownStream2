@@ -3,7 +3,8 @@ name: PyTorch Downstream CI 0
 on:
   repository_dispatch:
     types:
-      - pytorch-pr-trigger
+      - pull_request
+      - push
 
 permissions:
   contents: read
@@ -29,21 +30,26 @@ jobs:
       # Step 3: Check out the upstream PyTorch commit that triggered this run.
       #         upstream-repo and commit-sha are read automatically from the
       #         repository_dispatch client_payload.
-      - name: Checkout upstream PyTorch PR
+      - name: Checkout upstream PR commit
+        if: ${{ github.event.client_payload.event_type == 'pull_request' }}
         uses: actions/checkout@v6
         with:
-          repository: ${{ github.event.client_payload.upstream_repo }}
-          ref: ${{ github.event.client_payload.head_sha }}
+          repository: ${{ github.event.client_payload.payload.repository.full_name }}
+          ref: ${{ github.event.client_payload.payload.pull_request.head.sha }}
           token: ${{ github.token }}
           submodules: recursive
           path: pytorch
 
-      - name: Show last 10 commits (upstream pytorch)
-        shell: bash
-        run: |
-          set -euo pipefail
-          cd pytorch
-          git --no-pager log -n 10 --oneline --decorate
+      - name: Checkout upstream push commit
+        if: ${{ github.event.client_payload.event_type == 'push' }}
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ github.event.client_payload.payload.repository.full_name }}
+          ref: ${{ github.event.client_payload.payload.after }}
+          token: ${{ github.token }}
+          submodules: recursive
+          path: pytorch
+
 
       # # Step 4: Run CI
       # - name: Run CI
