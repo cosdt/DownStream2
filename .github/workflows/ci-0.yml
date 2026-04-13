@@ -61,7 +61,7 @@ jobs:
       #         is updated even when earlier steps fail.
       - name: Report final result to Relay Server
         if: always()
-        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@local-testing-l2
+        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@l2-karhou
         with:
           status: completed
           conclusion: ${{ job.status }}
