@@ -17,6 +17,8 @@ jobs:
     steps:
       # Step 1: Check out this downstream repo
       - name: Checkout downstream repo
+        env: 
+            RELAY_URL: https://smee.io/FYIELaMU9gILwrNv
         uses: actions/checkout@v6
 
       # Step 2: Report in-progress status as early as possible so the upstream
