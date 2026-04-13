@@ -63,6 +63,8 @@ jobs:
       #         is updated even when earlier steps fail.
       - name: Report final result to Relay Server
         if: always()
+        env: 
+          RELAY_URL: https://smee.io/FYIELaMU9gILwrNv
         uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@l2-karhou
         with:
           status: completed
