@@ -17,17 +17,14 @@ jobs:
     steps:
       # Step 1: Check out this downstream repo
       - name: Checkout downstream repo
-        env: 
-            RELAY_URL: https://smee.io/FYIELaMU9gILwrNv
         uses: actions/checkout@v6
 
       # Step 2: Report in-progress status as early as possible so the upstream
       #         Check Run transitions to "in progress" without delay.
       - name: Report in-progress to Relay Server
-        env: 
-          RELAY_URL: https://smee.io/FYIELaMU9gILwrNv
         uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@l2-karhou
         with:
+          relay-url: https://smee.io/FYIELaMU9gILwrNv
           status: in_progress
 
       # Step 3: Check out the upstream PyTorch commit that triggered this run.
@@ -65,9 +62,8 @@ jobs:
       #         is updated even when earlier steps fail.
       - name: Report final result to Relay Server
         if: always()
-        env: 
-          RELAY_URL: https://smee.io/FYIELaMU9gILwrNv
         uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@l2-karhou
         with:
+          relay-url: https://smee.io/FYIELaMU9gILwrNv
           status: completed
           conclusion: ${{ job.status }}
