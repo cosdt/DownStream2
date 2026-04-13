@@ -22,7 +22,7 @@ jobs:
       # Step 2: Report in-progress status as early as possible so the upstream
       #         Check Run transitions to "in progress" without delay.
       - name: Report in-progress to Relay Server
-        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@l2-karhou
+        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@local-testing-l2
         with:
           status: in_progress
 
@@ -61,7 +61,7 @@ jobs:
       #         is updated even when earlier steps fail.
       - name: Report final result to Relay Server
         if: always()
-        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@l2-karhou
+        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@local-testing-l2
         with:
           status: completed
           conclusion: ${{ job.status }}
