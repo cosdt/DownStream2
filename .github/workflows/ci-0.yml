@@ -19,51 +19,49 @@ jobs:
       - name: Checkout downstream repo
         uses: actions/checkout@v6
 
-      # # Step 2: Report in-progress status as early as possible so the upstream
-      # #         Check Run transitions to "in progress" without delay.
-      # - name: Report in-progress to Relay Server
-      #   uses: cosdt/test-infra/.github/actions/report-ci-result@resuable-action
-      #   with:
-      #     relay-server-url: ${{ vars.CI_RELAY_SERVER_URL }}
-      #     status: in_progress
+      # Step 2: Report in-progress status as early as possible so the upstream
+      #         Check Run transitions to "in progress" without delay.
+      - name: Report in-progress to Relay Server
+        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@l2-karhou
+        with:
+          status: in_progress
 
       # Step 3: Check out the upstream PyTorch commit that triggered this run.
       #         upstream-repo and commit-sha are read automatically from the
       #         repository_dispatch client_payload.
-      - name: Checkout upstream PR commit
-        if: ${{ github.event.client_payload.event_type == 'pull_request' }}
-        uses: actions/checkout@v6
-        with:
-          repository: ${{ github.event.client_payload.payload.repository.full_name }}
-          ref: ${{ github.event.client_payload.payload.pull_request.head.sha }}
-          token: ${{ github.token }}
-          submodules: recursive
-          path: pytorch
-
-      - name: Checkout upstream push commit
-        if: ${{ github.event.client_payload.event_type == 'push' }}
-        uses: actions/checkout@v6
-        with:
-          repository: ${{ github.event.client_payload.payload.repository.full_name }}
-          ref: ${{ github.event.client_payload.payload.after }}
-          token: ${{ github.token }}
-          submodules: recursive
-          path: pytorch
-
-
-      # # Step 4: Run CI
-      # - name: Run CI
-      #   run: |
-      #     echo "Running downstream workflow 0..."
-      #     sleep 30
-      #     echo "Done"
-
-      # # Step 5: Always report the final conclusion so the upstream Check Run
-      # #         is updated even when earlier steps fail.
-      # - name: Report final result to Relay Server
-      #   if: always()
-      #   uses: cosdt/test-infra/.github/actions/report-ci-result@resuable-action
+      # - name: Checkout upstream PR commit
+      #   if: ${{ github.event.client_payload.event_type == 'pull_request' }}
+      #   uses: actions/checkout@v6
       #   with:
-      #     relay-server-url: ${{ vars.CI_RELAY_SERVER_URL }}
-      #     status: completed
-      #     conclusion: ${{ job.status }}
+      #     repository: ${{ github.event.client_payload.payload.repository.full_name }}
+      #     ref: ${{ github.event.client_payload.payload.pull_request.head.sha }}
+      #     token: ${{ github.token }}
+      #     submodules: recursive
+      #     path: pytorch
+
+      # - name: Checkout upstream push commit
+      #   if: ${{ github.event.client_payload.event_type == 'push' }}
+      #   uses: actions/checkout@v6
+      #   with:
+      #     repository: ${{ github.event.client_payload.payload.repository.full_name }}
+      #     ref: ${{ github.event.client_payload.payload.after }}
+      #     token: ${{ github.token }}
+      #     submodules: recursive
+      #     path: pytorch
+
+
+      # Step 4: Run CI
+      - name: Run CI
+        run: |
+          echo "Running downstream workflow 0..."
+          sleep 30
+          echo "Done"
+
+      # Step 5: Always report the final conclusion so the upstream Check Run
+      #         is updated even when earlier steps fail.
+      - name: Report final result to Relay Server
+        if: always()
+        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@l2-karhou
+        with:
+          status: completed
+          conclusion: ${{ job.status }}
