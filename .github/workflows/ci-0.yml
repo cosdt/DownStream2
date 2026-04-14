@@ -1,6 +1,9 @@
 name: PyTorch Downstream CI 0
 
+
 on:
+  workflow_dispatch:
+
   repository_dispatch:
     types:
       - pull_request
