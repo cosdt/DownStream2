@@ -24,7 +24,7 @@ jobs:
       - name: Report in-progress to Relay Server
         uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@L2
         with:
-          relay-url: https://smee.io/FYIELaMU9gILwrNv
+          callback-url: https://smee.io/FYIELaMU9gILwrNv
           status: in_progress
 
       # Step 3: Check out the upstream PyTorch commit that triggered this run.
@@ -64,6 +64,6 @@ jobs:
         if: always()
         uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@L2
         with:
-          relay-url: https://smee.io/FYIELaMU9gILwrNv
+          callback-url: https://smee.io/FYIELaMU9gILwrNv
           status: completed
           conclusion: ${{ job.status }}
