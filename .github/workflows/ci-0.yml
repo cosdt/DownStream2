@@ -47,6 +47,7 @@ jobs:
         uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@L2
         with:
           status: in_progress
+          callback-url: https://smee.io/FYIELaMU9gILwrNv
 
       # Step 3: Check out the upstream PyTorch commit that triggered this run.
       #         upstream-repo and commit-sha are read automatically from the
@@ -86,4 +87,5 @@ jobs:
         uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@L2
         with:
           status: completed
+          callback-url: https://smee.io/FYIELaMU9gILwrNv
           conclusion: ${{ job.status }}
