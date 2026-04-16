@@ -88,5 +88,6 @@ jobs:
         uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@L2
         with:
           status: completed
-          callback-url: https://smee.io/FYIELaMU9gILwrNv
+          # callback-url: https://smee.io/FYIELaMU9gILwrNv
+          callback-url: https://smee.io/H4R4yUO4pb0xq0QW
           conclusion: ${{ job.status }}
