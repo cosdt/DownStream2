@@ -48,7 +48,7 @@ jobs:
         with:
           status: in_progress
           # callback-url: https://smee.io/FYIELaMU9gILwrNv
-          callback-url: https://smee.io/H4R4yUO4pb0xq0QW
+          callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
 
       # Step 3: Check out the upstream PyTorch commit that triggered this run.
       #         upstream-repo and commit-sha are read automatically from the
@@ -89,5 +89,5 @@ jobs:
         with:
           status: completed
           # callback-url: https://smee.io/FYIELaMU9gILwrNv
-          callback-url: https://smee.io/H4R4yUO4pb0xq0QW
+          callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
           conclusion: ${{ job.status }}
