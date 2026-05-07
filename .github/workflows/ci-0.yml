@@ -91,3 +91,13 @@ jobs:
           # callback-url: https://smee.io/FYIELaMU9gILwrNv
           callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
           conclusion: ${{ job.status }}
+      # Step 5: Always report the final conclusion so the upstream Check Run
+      #         is updated even when earlier steps fail.
+      - name: Report final result to Relay Server
+        if: always()
+        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
+        with:
+          status: completed
+          # callback-url: https://smee.io/FYIELaMU9gILwrNv
+          callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
+          conclusion: ${{ job.status }}
