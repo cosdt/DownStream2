@@ -50,6 +50,13 @@ jobs:
           # conclusion: success
           status: in_progress
           callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
+      - name: Report in-progress to Relay Server
+        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
+        with:
+          # status: completed
+          # conclusion: success
+          status: in_progress
+          callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
 
       # Step 3: Check out the upstream PyTorch commit that triggered this run.
       #         upstream-repo and commit-sha are read automatically from the
