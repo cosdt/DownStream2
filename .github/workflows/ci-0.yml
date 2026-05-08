@@ -46,11 +46,10 @@ jobs:
       - name: Report in-progress to Relay Server
         uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
         with:
-          status: completed
-          conclusion: success
-          # status: in_progress
-          # callback-url: https://smee.io/FYIELaMU9gILwrNv
-          callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
+          # status: completed
+          # conclusion: success
+          status: in_progress
+          # callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
 
       # Step 3: Check out the upstream PyTorch commit that triggered this run.
       #         upstream-repo and commit-sha are read automatically from the
@@ -90,16 +89,15 @@ jobs:
         uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
         with:
           status: completed
-          # callback-url: https://smee.io/FYIELaMU9gILwrNv
           callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
           conclusion: ${{ job.status }}
       # Step 5: Always report the final conclusion so the upstream Check Run
       #         is updated even when earlier steps fail.
-      - name: Report final result to Relay Server
-        if: always()
-        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
-        with:
-          status: completed
-          # callback-url: https://smee.io/FYIELaMU9gILwrNv
-          callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
-          conclusion: ${{ job.status }}
+      # - name: Report final result to Relay Server
+      #   if: always()
+      #   uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
+      #   with:
+      #     status: completed
+      #     # callback-url: https://smee.io/FYIELaMU9gILwrNv
+      #     callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
+      #     conclusion: ${{ job.status }}
