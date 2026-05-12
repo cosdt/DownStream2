@@ -46,9 +46,9 @@ jobs:
       - name: Report in-progress to Relay Server
         uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
         with:
-          # status: completed
-          # conclusion: success
-          status: in_progress
+          status: completed
+          conclusion: success
+          # status: in_progress
           # callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
           callback-url: https://vogqrvxq5r2vg6sw5vymnx3ldu0mynns.lambda-url.us-east-1.on.aws/github/result/
       # - name: Report in-progress to Relay Server
