@@ -46,19 +46,19 @@ jobs:
       - name: Report in-progress to Relay Server
         uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
         with:
-          # status: completed
-          # conclusion: success
-          status: in_progress
+          status: completed
+          conclusion: success
+          # status: in_progress
           # callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
           callback-url: https://sr4l2nhu3efkfa523siuv2hpxe0yeyvm.lambda-url.us-east-1.on.aws/github/result/
-      - name: Report in-progress to Relay Server
-        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
-        with:
-          # status: completed
-          # conclusion: success
-          status: in_progress
-          # callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
-          callback-url: https://sr4l2nhu3efkfa523siuv2hpxe0yeyvm.lambda-url.us-east-1.on.aws/github/result/
+      # - name: Report in-progress to Relay Server
+      #   uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
+      #   with:
+      #     # status: completed
+      #     # conclusion: success
+      #     status: in_progress
+      #     # callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
+      #     callback-url: https://sr4l2nhu3efkfa523siuv2hpxe0yeyvm.lambda-url.us-east-1.on.aws/github/result/
 
       # Step 3: Check out the upstream PyTorch commit that triggered this run.
       #         upstream-repo and commit-sha are read automatically from the
