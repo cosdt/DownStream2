@@ -86,7 +86,6 @@ jobs:
 
       # Step 4: Run CI
       - name: Run CI
-        if: always()
         run: |
           echo "Running downstream workflow 0..."
           sleep 30
