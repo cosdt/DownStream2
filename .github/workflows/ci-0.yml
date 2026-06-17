@@ -93,14 +93,14 @@ jobs:
 
       # Step 5: Always report the final conclusion so the upstream Check Run
       #         is updated even when earlier steps fail.
-      - name: Report final result to Relay Server
-        if: always()
-        uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
-        with:
-          status: completed
-          # callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
-          callback-url: https://nmbnhgoqesx4iuxuzoa7sjklna0ylkgr.lambda-url.us-east-1.on.aws/github/callback/
-          conclusion: ${{ job.status }}
+      # - name: Report final result to Relay Server
+      #   if: always()
+      #   uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
+      #   with:
+      #     status: completed
+      #     # callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
+      #     callback-url: https://nmbnhgoqesx4iuxuzoa7sjklna0ylkgr.lambda-url.us-east-1.on.aws/github/callback/
+      #     conclusion: ${{ job.status }}
       # Step 5: Always report the final conclusion so the upstream Check Run
       #         is updated even when earlier steps fail.
       # - name: Report final result to Relay Server
