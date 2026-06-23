@@ -44,45 +44,10 @@ jobs:
       # Step 2: Report in-progress status as early as possible so the upstream
       #         Check Run transitions to "in progress" without delay.
       - name: Report in-progress to Relay Server
-        uses: pytorch/test-infra/.github/actions/cross-repo-ci-relay-callback@main
+        uses: cosdt/UpStream/.github/@main
         with:
-          # status: completed
-          # conclusion: success
           status: in_progress
-          # callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
           callback-url: https://nmbnhgoqesx4iuxuzoa7sjklna0ylkgr.lambda-url.us-east-1.on.aws/github/callback/
-      # - name: Report in-progress to Relay Server
-      #   uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
-      #   with:
-      #     # status: completed
-      #     # conclusion: success
-      #     status: in_progress
-      #     # callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
-      #     callback-url: https://nmbnhgoqesx4iuxuzoa7sjklna0ylkgr.lambda-url.us-east-1.on.aws/github/callback/
-
-      # Step 3: Check out the upstream PyTorch commit that triggered this run.
-      #         upstream-repo and commit-sha are read automatically from the
-      #         repository_dispatch client_payload.
-      # - name: Checkout upstream PR commit
-      #   if: ${{ github.event.client_payload.event_type == 'pull_request' }}
-      #   uses: actions/checkout@v6
-      #   with:
-      #     repository: ${{ github.event.client_payload.payload.repository.full_name }}
-      #     ref: ${{ github.event.client_payload.payload.pull_request.head.sha }}
-      #     token: ${{ github.token }}
-      #     submodules: recursive
-      #     path: pytorch
-
-      # - name: Checkout upstream push commit
-      #   if: ${{ github.event.client_payload.event_type == 'push' }}
-      #   uses: actions/checkout@v6
-      #   with:
-      #     repository: ${{ github.event.client_payload.payload.repository.full_name }}
-      #     ref: ${{ github.event.client_payload.payload.after }}
-      #     token: ${{ github.token }}
-      #     submodules: recursive
-      #     path: pytorch
-
 
       # Step 4: Run CI
       - name: Run CI
@@ -94,22 +59,11 @@ jobs:
 
       # Step 5: Always report the final conclusion so the upstream Check Run
       #         is updated even when earlier steps fail.
-      # - name: Report final result to Relay Server
-      #   if: always()
-      #   uses: pytorch/test-infra/.github/actions/cross-repo-ci-relay-callback@main
-      #   with:
-      #     status: completed
-      #     # callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
-      #     callback-url: https://nmbnhgoqesx4iuxuzoa7sjklna0ylkgr.lambda-url.us-east-1.on.aws/github/callback/
-      #     conclusion: ${{ job.status }}
-      # Step 5: Always report the final conclusion so the upstream Check Run
-      #         is updated even when earlier steps fail.
-      # - name: Report final result to Relay Server
-      #   if: always()
-      #   uses: cosdt/test-infra/.github/actions/cross-repo-ci-relay-callback@crcr-L2
-      #   with:
-      #     status: completed
-      #     # callback-url: https://smee.io/FYIELaMU9gILwrNv
-      #     callback-url: https://smee.io/Ak2GaTn6BPVGXt7b
-      #     callback-url: https://nmbnhgoqesx4iuxuzoa7sjklna0ylkgr.lambda-url.us-east-1.on.aws/github/callback/
-      #     conclusion: ${{ job.status }}
+      - name: Report final result to Relay Server
+        if: always()
+        uses: cosdt/UpStream/.github/@main
+        with:
+          status: completed
+          callback-url: https://nmbnhgoqesx4iuxuzoa7sjklna0ylkgr.lambda-url.us-east-1.on.aws/github/callback/
+          conclusion: ${{ job.status }}
+
