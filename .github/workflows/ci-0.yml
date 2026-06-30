@@ -57,13 +57,13 @@ jobs:
           sleep 300
           echo "Done"
 
-      # Step 5: Always report the final conclusion so the upstream Check Run
-      #         is updated even when earlier steps fail.
-      - name: Report final result to Relay Server
-        if: always()
-        uses: cosdt/UpStream/.github/@main
-        with:
-          status: completed
-          callback-url: https://nmbnhgoqesx4iuxuzoa7sjklna0ylkgr.lambda-url.us-east-1.on.aws/github/callback/
-          conclusion: ${{ job.status }}
+      # # Step 5: Always report the final conclusion so the upstream Check Run
+      # #         is updated even when earlier steps fail.
+      # - name: Report final result to Relay Server
+      #   if: always()
+      #   uses: cosdt/UpStream/.github/@main
+      #   with:
+      #     status: completed
+      #     callback-url: https://nmbnhgoqesx4iuxuzoa7sjklna0ylkgr.lambda-url.us-east-1.on.aws/github/callback/
+      #     conclusion: ${{ job.status }}
 
