@@ -54,7 +54,7 @@ jobs:
         if: always()
         run: |
           echo "Running downstream workflow 0..."
-          sleep 300
+          sleep 200
           echo "Done"
 
       # # Step 5: Always report the final conclusion so the upstream Check Run
@@ -89,7 +89,7 @@ jobs:
         if: always()
         run: |
           echo "Running downstream workflow 0..."
-          sleep 300
+          sleep 200
           echo "Done"
 
       # Step 5: Always report the final conclusion so the upstream Check Run
