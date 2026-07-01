@@ -67,3 +67,39 @@ jobs:
       #     callback-url: https://nmbnhgoqesx4iuxuzoa7sjklna0ylkgr.lambda-url.us-east-1.on.aws/github/callback/
       #     conclusion: ${{ job.status }}
 
+  ci-2:
+    if: ${{ github.event.client_payload.payload.action != 'closed' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out this downstream repo
+      - name: Checkout downstream repo
+        uses: actions/checkout@v6
+
+      # Step 2: Report in-progress status as early as possible so the upstream
+      #         Check Run transitions to "in progress" without delay.
+      - name: Report in-progress to Relay Server
+        uses: cosdt/UpStream/.github/@main
+        with:
+          status: in_progress
+          callback-url: https://nmbnhgoqesx4iuxuzoa7sjklna0ylkgr.lambda-url.us-east-1.on.aws/github/callback/
+
+      # Step 4: Run CI
+      - name: Run CI
+        if: always()
+        run: |
+          echo "Running downstream workflow 0..."
+          sleep 300
+          echo "Done"
+
+      # Step 5: Always report the final conclusion so the upstream Check Run
+      #         is updated even when earlier steps fail.
+      - name: Report final result to Relay Server
+        if: always()
+        uses: cosdt/UpStream/.github/@main
+        with:
+          status: completed
+          callback-url: https://nmbnhgoqesx4iuxuzoa7sjklna0ylkgr.lambda-url.us-east-1.on.aws/github/callback/
+          conclusion: ${{ job.status }}
+      
+
